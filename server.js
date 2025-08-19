@@ -14,18 +14,18 @@ const app = express();
 // Trust reverse proxy if you're behind one (e.g. Render, Nginx, Vercel)
 app.set("trust proxy", true);
 
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: false, limit: "10mb" }));
-app.use(helmet());
-app.use(cookieParser());
-app.use(morgan("dev"));
 app.use(
   cors({
-    origin: ["http:/localhost:4000"],
+    origin: ["http://localhost:4000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+app.use(morgan("dev"));
+app.use(helmet());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: false, limit: "10mb" }));
+app.use(cookieParser());
 
 app.use(arcjetMiddleware);
 

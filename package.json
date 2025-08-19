@@ -10,7 +10,7 @@
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tabuke Ezekiel",
   "license": "ISC",
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.10",
