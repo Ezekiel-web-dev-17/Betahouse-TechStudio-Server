@@ -18,15 +18,15 @@ export const connectToDatabase = async () => {
       await Property.deleteMany();
       console.log("Previous records deleted successfully");
     } catch (error) {
-      console.error("Error uploading products:", error);
+      console.error("Error uploading properties:", error);
     }
 
     try {
       console.log("Uploading updated/new records...");
       await Property.create(propertyApi);
-      console.log("Products uploaded successfully");
+      console.log("Properties uploaded successfully");
     } catch (creationError) {
-      console.error("Error uploading products:", creationError);
+      console.error("Error uploading properties:", creationError);
     }
 
     process.exit(0);
