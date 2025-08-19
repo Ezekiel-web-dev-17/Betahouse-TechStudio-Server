@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(
   {
-    firstname: {
+    firstName: {
       type: String,
       minLength: 2,
       trim: true,
@@ -10,7 +10,7 @@ const userSchema = new Schema(
       maxLength: 50,
     },
 
-    lastname: {
+    lastName: {
       type: String,
       minLength: 2,
       required: [true, "Enter your Last name."],
@@ -38,6 +38,13 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.set("toJSON", {
+  transform: (_doc, ret) => {
+    delete ret.password;
+    return ret;
+  },
+});
 
 const User = mongoose.model("User", userSchema);
 
