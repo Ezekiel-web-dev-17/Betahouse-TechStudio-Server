@@ -2,7 +2,7 @@ import { Router } from "express";
 import { Property } from "../models/property.model.js";
 const propertyRouter = Router();
 
-propertyRouter.get("/properties", async (req, res) => {
+propertyRouter.get("/", async (req, res) => {
   try {
     const { query } = req.query;
     const property = await Property.find()

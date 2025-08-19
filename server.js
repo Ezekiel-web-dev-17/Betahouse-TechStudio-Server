@@ -29,8 +29,8 @@ app.use(
 
 app.use(arcjetMiddleware);
 
-app.use("api/v1/auth", authRouter);
-app.use("api/v1/property", propertyRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/property", propertyRouter);
 
 app.use(errorMiddleware);
 
