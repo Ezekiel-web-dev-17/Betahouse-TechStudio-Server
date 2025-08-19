@@ -11,6 +11,8 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 import arcjetMiddleware from "./middlewares/arcjet.middleware.js";
 
 const app = express();
+// Trust reverse proxy if you're behind one (e.g. Render, Nginx, Vercel)
+app.set("trust proxy", true);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
