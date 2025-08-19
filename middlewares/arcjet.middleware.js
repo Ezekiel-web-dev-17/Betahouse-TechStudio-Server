@@ -15,6 +15,7 @@ const aj = arcjet({
       // Block all bots except the following
       allow: [
         "CATEGORY:SEARCH_ENGINE", // Google, Bing, etc
+        "CATEGORY:GO_HTTP",
         // Uncomment to allow these other common bot categories
         // See the full list at https://arcjet.com/bot-list
         "CATEGORY:MONITOR", // Uptime monitoring services
