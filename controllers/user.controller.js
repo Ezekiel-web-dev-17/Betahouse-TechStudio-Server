@@ -1,23 +1,24 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
 export const signUp = async (req, res, next) => {
-  const session = mongoose.startSession();
-  await session.startTransaction();
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const { firstName, lastName, email, password } = req.body;
 
     if (!firstName || !lastName || !email || !password) {
-      return res.status(402).json({
+      return res.status(400).json({
         success: false,
         message: "All fields above are required.",
       });
     }
 
-    const existingUser = await User.find({ email });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "User already exists.",
       });
@@ -27,11 +28,12 @@ export const signUp = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await User.create(
-      { firstName, lastName, email, password: hashedPassword },
+    const [newUser] = await User.create(
+      [{ firstName, lastName, email, password: hashedPassword }],
       { session }
     );
 
+    await newUser.save({ session });
     await session.commitTransaction();
     session.endSession();
 
