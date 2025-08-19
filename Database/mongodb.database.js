@@ -28,8 +28,6 @@ export const connectToDatabase = async () => {
     } catch (creationError) {
       console.error("Error uploading properties:", creationError);
     }
-
-    process.exit(0);
   } catch (error) {
     console.log("Error connecting to Database: ", error);
     process.exit(1);
