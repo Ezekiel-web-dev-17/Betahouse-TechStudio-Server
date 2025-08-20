@@ -1,4 +1,5 @@
 import { Property } from "../models/property.model.js";
+import redisClient from "../redis.js";
 
 export const getPropertiesByLimit = async (req, res, next) => {
   try {
