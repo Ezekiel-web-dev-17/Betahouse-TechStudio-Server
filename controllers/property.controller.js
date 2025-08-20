@@ -12,7 +12,7 @@ export const getPropertiesByLimit = async (req, res, next) => {
       console.log("✅ Serving from Redis Cache");
       return res.status(200).json({
         success: true,
-        property: JSON.parse(cached),
+        properties: JSON.parse(cached),
         pagination: {
           page,
           limit: lmt,
@@ -65,11 +65,7 @@ export const filterProperties = async (req, res, next) => {
       console.log("✅ Serving from Redis Cache");
       return res.status(200).json({
         success: true,
-        property: JSON.parse(cached),
-        pagination: {
-          page,
-          limit: lmt,
-        },
+        properties: JSON.parse(cached),
         fromCache: true,
       });
     }
@@ -114,7 +110,7 @@ export const sortByPrice = async (req, res, next) => {
     console.log("Query is not found in Cache, querying MongoDB.");
 
     const properties = await Property.find()
-      .sort({ price: order === "asc" ? 1 : -1 }) // sort by price
+      .sort({ amount: order === "asc" ? 1 : -1 }) // sort by price
       .lean();
 
     await redisClient.setEx(
