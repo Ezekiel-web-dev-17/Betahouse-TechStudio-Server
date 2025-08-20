@@ -1,8 +1,8 @@
 import { createClient } from "redis";
-import { REDIS_SECRET } from "./config/env.config.js";
+import { REDIS } from "./config/env.config.js";
 
 const redisClient = createClient({
-  url: REDIS_SECRET,
+  url: REDIS,
 });
 
 redisClient.on("connect", () => console.log("✅ Connected to Redis"));
