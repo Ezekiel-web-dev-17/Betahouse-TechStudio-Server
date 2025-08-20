@@ -3,6 +3,21 @@ import { DB_URI } from "../config/env.config.js";
 import { Property } from "../models/property.model.js";
 import propertyApi from "../propertyApi.js";
 
+export const seedDatabase = async () => {
+  try {
+    const count = await Property.countDocuments();
+    if (count === 0) {
+      console.log("Seeding database with initial data...");
+      await Property.create(propertyApi);
+      console.log("Database seeded successfully");
+    } else {
+      console.log("Database already has data, skipping seed");
+    }
+  } catch (error) {
+    console.error("Error seeding database:", error);
+  }
+};
+
 export const connectToDatabase = async () => {
   try {
     await mongoose.connect(DB_URI, {
@@ -15,7 +30,7 @@ export const connectToDatabase = async () => {
 
     try {
       console.log("Deleting previous records...");
-      await Property.deleteMany();
+      await seedDatabase();
       console.log("Previous records deleted successfully");
     } catch (error) {
       console.error("Error uploading properties:", error);

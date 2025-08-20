@@ -22,11 +22,13 @@ const propertySchema = new Schema(
     location: {
       type: String,
       required: true,
+      index: true,
     },
 
     bed: {
       type: Number,
       required: true,
+      index: true,
     },
 
     bath: {
