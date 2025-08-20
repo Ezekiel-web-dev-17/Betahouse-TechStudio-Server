@@ -1,28 +1,19 @@
 import { Router } from "express";
-import { Property } from "../models/property.model.js";
+import {
+  filterProperties,
+  getPropertiesByLimit,
+  sortByPrice,
+  sortByTitle,
+} from "../controllers/property.controller.js";
+
 const propertyRouter = Router();
 
-propertyRouter.get("/", async (req, res, next) => {
-  try {
-    const { page, lmt } = req.query;
-    const properties = await Property.find()
-      .skip(page * 10)
-      .limit(lmt)
-      .lean();
+propertyRouter.get("/", getPropertiesByLimit);
 
-    const totalPages = await Property.countDocuments();
-    res.status(200).json({
-      success: true,
-      properties,
-      pagination: {
-        page,
-        limit: lmt,
-        totalPages,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+propertyRouter.get("/filter", filterProperties);
+
+propertyRouter.get("/sort-by-price", sortByPrice);
+
+propertyRouter.get("/sort-by-title", sortByTitle);
 
 export default propertyRouter;

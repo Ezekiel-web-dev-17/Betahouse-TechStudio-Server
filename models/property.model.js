@@ -5,7 +5,6 @@ const propertySchema = new Schema(
     image: {
       type: String,
       required: true,
-      index: true,
       unique: true,
     },
 
@@ -17,6 +16,7 @@ const propertySchema = new Schema(
     title: {
       type: String,
       required: true,
+      index: true,
     },
 
     location: {
@@ -39,11 +39,13 @@ const propertySchema = new Schema(
     amount: {
       type: Number,
       required: true,
+      index: true,
     },
 
     propertyType: {
       type: String,
       required: true,
+      index: true,
     },
   },
   { timestamps: true }
