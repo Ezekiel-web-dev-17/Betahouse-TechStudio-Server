@@ -14,17 +14,7 @@ const app = express();
 // Trust reverse proxy if you're behind one (e.g. Render, Nginx, Vercel)
 app.set("trust proxy", true);
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:4000",
-      "http://127.0.0.1:5173",
-      "https://betahouse-tech-studio-client.vercel.app/",
-    ],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors());
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.json({ limit: "10mb" }));
