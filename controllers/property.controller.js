@@ -29,7 +29,7 @@ export const getPropertiesByLimit = async (req, res, next) => {
       .lean();
 
     await redisClient.setEx(
-      `Property from page: ${page} and limit: ${lmt}`,
+      `Properties from page(s) ${page} limited to${lmt}`,
       60 * 60 * 60,
       JSON.stringify(properties)
     );
