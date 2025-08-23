@@ -1,19 +1,18 @@
-const img1 = "./utils/b-11.jpg.svg";
-const img2 = "./utils/b-11.jpg (8).svg";
-const img3 = "./utils/b-11.jpg (1).svg";
-const img4 = "./utils/b-11.jpg (2).svg";
-const img5 = "./utils/b-11.jpg (3).svg";
-const img6 = "./utils/b-11.jpg (4).svg";
-const img7 = "./utils/b-11.jpg (5).svg";
-const img8 = "./utils/b-11.jpg (6).svg";
-const img9 = "./utils/b-11.jpg (7).svg";
-const img10 = "./utils/Contemporary Style House Plan - 3 Beds 2_5 Baths….jpeg";
-const img11 =
-  "./utils/Discover the charm and convenience of prefab homes….jpeg";
-const img12 = "./utils/efb164e4-b0f7-4eca-a366-4e11d834c457.jpeg";
-const img13 = "./utils/luxury.jpg";
-const img14 = "./utils/3af1446f-99c6-4bea-bb46-ef7d9a94c829.jpg";
-const img15 = "./utils/Black or white_.jpg";
+const img1 = "../utils/b-11.jpg.svg";
+const img2 = "../utils/b-11.jpg(8).svg";
+const img3 = "../utils/b-11.jpg(1).svg";
+const img4 = "../utils/b-11.jpg(2).svg";
+const img5 = "../utils/b-11.jpg(3).svg";
+const img6 = "../utils/b-11.jpg(4).svg";
+const img7 = "../utils/b-11.jpg(5).svg";
+const img8 = "../utils/b-11.jpg(6).svg";
+const img9 = "../utils/b-11.jpg(7).svg";
+const img10 = "../utils/ContemporaryStyleHousePlan3Beds25Baths.jpeg";
+const img11 = "../utils/Discoverthecharmandconvenienceofprefabhomes.jpeg";
+const img12 = "../utils/efb164e4-b0f7-4eca-a366-4e11d834c457.jpeg";
+const img13 = "../utils/luxury.jpg";
+const img14 = "../utils/3af1446f-99c6-4bea-bb46-ef7d9a94c829.jpg";
+const img15 = "../utils/Blackorwhite.jpg";
 
 const propertyApi = [
   {
