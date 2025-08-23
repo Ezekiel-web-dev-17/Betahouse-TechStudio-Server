@@ -8,7 +8,11 @@ export const seedDatabase = async () => {
     const count = await Property.countDocuments();
     if (count === 0) {
       console.log("Seeding database with initial data...");
+      await Property.deleteMany({});
+      console.log("Deleted properties Successfully.");
+      console.log("Creating properties...");
       await Property.create(propertyApi);
+      console.log("Created properties Successfully.");
       console.log("Database seeded successfully");
     } else {
       console.log("Database already has data, skipping seed");
@@ -34,14 +38,6 @@ export const connectToDatabase = async () => {
       console.log("Previous records deleted successfully");
     } catch (error) {
       console.error("Error uploading properties:", error);
-    }
-
-    try {
-      console.log("Uploading updated/new records...");
-      await Property.create(propertyApi);
-      console.log("Properties uploaded successfully");
-    } catch (creationError) {
-      console.error("Error uploading properties:", creationError);
     }
   } catch (error) {
     console.log("Error connecting to Database: ", error);
