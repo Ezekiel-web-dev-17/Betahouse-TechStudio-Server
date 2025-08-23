@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signIn, signUp } from "../controllers/user.controller.js";
+import { googleAuth, signIn, signUp } from "../controllers/user.controller.js";
 import {
   validateSignIn,
   validateSignUp,
@@ -16,6 +16,7 @@ const authLimiter = rateLimit({
 
 const authRouter = Router();
 
+authRouter.post("/google", authLimiter, googleAuth);
 authRouter.post("/sign-up", authLimiter, validateSignUp, signUp);
 authRouter.post("/sign-in", authLimiter, validateSignIn, signIn);
 

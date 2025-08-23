@@ -4,8 +4,9 @@ import redisClient from "../redis.js";
 export const getPropertiesByLimit = async (req, res, next) => {
   try {
     const { page, lmt } = req.query;
-    const cached = "";
-    // await redisClient.get(`Property from page: ${page} and limit: ${lmt}`);
+    const cached = await redisClient.get(
+      `Properties from page(s) ${page} limited to${lmt}`
+    );
 
     if (cached) {
       console.log("✅ Serving from Redis Cache");
