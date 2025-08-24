@@ -16,7 +16,7 @@ const authLimiter = rateLimit({
 
 const authRouter = Router();
 
-authRouter.post("/google", authLimiter, googleAuth);
+authRouter.post("/google", googleAuth);
 authRouter.post("/sign-up", authLimiter, validateSignUp, signUp);
 authRouter.post("/sign-in", authLimiter, validateSignIn, signIn);
 

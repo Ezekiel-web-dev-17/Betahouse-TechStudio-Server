@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
@@ -105,12 +106,16 @@ export const googleAuth = async (req, res) => {
     const payload = ticket.getPayload();
 
     let user = await User.findOne({ email: payload.email });
+    const randomPassword = crypto.randomBytes(32).toString("hex");
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
     if (!user) {
       user = await User.create({
         googleId: payload.sub,
-        name: payload.name,
+        firstName: payload.given_name,
+        lastName: payload.family_name,
         email: payload.email,
+        password: hashedPassword,
         picture: payload.picture,
       });
     }
@@ -123,7 +128,7 @@ export const googleAuth = async (req, res) => {
       user,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error in google auth", err);
     res.status(400).json({ success: false, message: "Invalid Google token" });
   }
 };
