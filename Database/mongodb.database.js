@@ -9,14 +9,15 @@ export const seedDatabase = async () => {
   try {
     const count = await Property.countDocuments();
     const countPopular = await Popular.countDocuments();
-    if (count === 0) {
+    if (count === 0 || countPopular === 0) {
       console.log("Seeding database with initial data...");
       await Property.deleteMany({});
-      console.log("Deleted properties Successfully.");
-      console.log("Creating properties...");
+      await Popular.deleteMany(discoverApi);
+      console.log("Deleted properties and popular properties Successfully.");
+      console.log("Creating properties and popular properties...");
       await Property.create(propertyApi);
       await Popular.create(discoverApi);
-      console.log("Created properties Successfully.");
+      console.log("Created properties and popular properties Successfully.");
       console.log("Database seeded successfully");
     } else {
       console.log("Database already has data, skipping seed");
@@ -41,7 +42,10 @@ export const connectToDatabase = async () => {
       await seedDatabase();
       console.log("Previous records deleted successfully");
     } catch (error) {
-      console.error("Error uploading properties:", error);
+      console.error(
+        "Error uploading properties and popular properties:",
+        error
+      );
     }
   } catch (error) {
     console.log("Error connecting to Database: ", error);
