@@ -1,7 +1,7 @@
-const discover1 = "../assets/Discover1.svg";
-const discover2 = "../assets/Discover2.svg";
-const discover3 = "../assets/Discover3.svg";
-const discover4 = "../assets/Discover4.svg";
+const discover1 = "../utils/Discover1.svg";
+const discover2 = "../utils/Discover2.svg";
+const discover3 = "../utils/Discover3.svg";
+const discover4 = "../utils/Discover4.svg";
 
 export const discoverApi = [
   {
