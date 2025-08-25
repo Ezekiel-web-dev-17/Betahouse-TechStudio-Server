@@ -9,6 +9,7 @@ import propertyRouter from "./routes/property.route.js";
 import { connectToDatabase } from "./Database/mongodb.database.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import arcjetMiddleware from "./middlewares/arcjet.middleware.js";
+import popularRoute from "./routes/popular.route.js";
 
 const app = express();
 // Trust reverse proxy if you're behind one (e.g. Render, Nginx, Vercel)
@@ -25,6 +26,7 @@ app.use(arcjetMiddleware);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/property", propertyRouter);
+app.use("/api/v1/popular", popularRoute);
 
 app.use(errorMiddleware);
 

@@ -12,6 +12,6 @@ const popularSchema = new Schema({
   },
 });
 
-const Popular = new model("Popular", popularSchema);
+const Popular = model("Popular", popularSchema);
 
 export default Popular;
