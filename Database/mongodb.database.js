@@ -2,16 +2,19 @@ import mongoose from "mongoose";
 import { DB_URI } from "../config/env.config.js";
 import { Property } from "../models/property.model.js";
 import propertyApi from "../propertyApi.js";
+import Popular from "../models/popular.model.js";
 
 export const seedDatabase = async () => {
   try {
     const count = await Property.countDocuments();
+    const countPopular = await Popular.countDocuments();
     if (count === 0) {
       console.log("Seeding database with initial data...");
       await Property.deleteMany({});
       console.log("Deleted properties Successfully.");
       console.log("Creating properties...");
       await Property.create(propertyApi);
+      await Popular.create(p);
       console.log("Created properties Successfully.");
       console.log("Database seeded successfully");
     } else {
