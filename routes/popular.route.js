@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Popular from "../models/popular.model";
+import Popular from "../models/popular.model.js";
 
 const popularRoute = Router();
 
