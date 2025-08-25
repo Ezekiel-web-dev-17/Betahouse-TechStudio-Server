@@ -3,7 +3,7 @@ const discover2 = "../assets/Discover2.svg";
 const discover3 = "../assets/Discover3.svg";
 const discover4 = "../assets/Discover4.svg";
 
-const discoverApi = [
+export const discoverApi = [
   {
     title: "Semi Detached Duplex",
     price: "1, 430,000,000",

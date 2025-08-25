@@ -3,6 +3,7 @@ import { DB_URI } from "../config/env.config.js";
 import { Property } from "../models/property.model.js";
 import propertyApi from "../propertyApi.js";
 import Popular from "../models/popular.model.js";
+import { discoverApi } from "../popularProperties.js";
 
 export const seedDatabase = async () => {
   try {
@@ -14,7 +15,7 @@ export const seedDatabase = async () => {
       console.log("Deleted properties Successfully.");
       console.log("Creating properties...");
       await Property.create(propertyApi);
-      await Popular.create(p);
+      await Popular.create(discoverApi);
       console.log("Created properties Successfully.");
       console.log("Database seeded successfully");
     } else {
