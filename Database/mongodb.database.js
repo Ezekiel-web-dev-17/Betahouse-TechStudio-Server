@@ -9,10 +9,10 @@ export const seedDatabase = async () => {
   try {
     const count = await Property.countDocuments();
     const countPopular = await Popular.countDocuments();
-    if (count === 0 || countPopular === 0) {
+    if (count === 0 && countPopular === 0) {
       console.log("Seeding database with initial data...");
       await Property.deleteMany({});
-      await Popular.deleteMany(discoverApi);
+      await Popular.deleteMany({});
       console.log("Deleted properties and popular properties Successfully.");
       console.log("Creating properties and popular properties...");
       await Property.create(propertyApi);
