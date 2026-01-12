@@ -35,7 +35,11 @@ const aj = arcjet({
 
 const arcjetMiddleware = async (req, res, next) => {
   try {
-    const decision = await aj.protect(req, { requested: 1 });
+    const decision = await aj.protect(req, {
+      // Mock an IP for local development if the real one is missing
+      ip: req.ip ?? "127.0.0.1",
+      fingerprint: req.headers["user-agent"] || "",
+    });
 
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
