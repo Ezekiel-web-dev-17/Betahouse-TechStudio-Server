@@ -1,13 +1,17 @@
-import { createClient } from "redis";
-import { REDIS } from "./config/env.config.js";
+import { createClient } from 'redis';
+import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_USERNAME } from './config/env.config.js';
 
-const redisClient = createClient({
-  url: REDIS,
+const client = createClient({
+  username: REDIS_USERNAME,
+  password: REDIS_PASSWORD,
+  socket: {
+    host: REDIS_HOST,
+    port: REDIS_PORT ? parseInt(REDIS_PORT) : 6379,
+  }
 });
 
-redisClient.on("connect", () => console.log("✅ Connected to Redis"));
-redisClient.on("error", (err) => console.error("Redis Error:", err));
+client.on('error', err => console.log('Redis Client Error', err));
 
-await redisClient.connect();
+await client.connect();
 
-export default redisClient;
+export default client;

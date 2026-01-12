@@ -30,8 +30,8 @@ app.use("/api/v1/popular", popularRoute);
 
 app.use(errorMiddleware);
 
-app.listen(PORT, async () => {
+app.listen(parseInt(PORT), async () => {
   console.log("Connecting Server to Database...");
   await connectToDatabase();
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${parseInt(PORT)}`);
 });

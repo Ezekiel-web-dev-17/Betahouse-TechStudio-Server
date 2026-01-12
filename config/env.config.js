@@ -9,7 +9,9 @@ export const {
   ARCJET_ENV,
   JWT_SECRET,
   JWT_EXPIRES_IN,
-  REDIS_SECRET,
-  REDIS,
+  REDIS_USERNAME,
+  REDIS_HOST,
+  REDIS_PORT,
+  REDIS_PASSWORD,
   CLIENT_ID,
 } = process.env;
