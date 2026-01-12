@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   filterProperties,
-  getProperties,
   getPropertiesByLimit,
   sortByPrice,
   sortByTitle,
@@ -9,7 +8,6 @@ import {
 
 const propertyRouter = Router();
 
-propertyRouter.get("/", getProperties);
 
 propertyRouter.get("/", getPropertiesByLimit);
 

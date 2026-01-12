@@ -1,55 +1,11 @@
 import { Property } from "../models/property.model.js";
 import redisClient from "../redis.js";
 
-export const getProperties = async (req, res, next) => {
-  try {
-    const { lmt } = req.query;
-    const cached = await redisClient.get(
-      `Properties from page(s) limited to ${lmt}`
-    );
-
-    if (cached) {
-      console.log("✅ Serving from Redis Cache");
-      return res.status(200).json({
-        success: true,
-        properties: JSON.parse(cached),
-        pagination: {
-          limit: lmt,
-        },
-        fromCache: true,
-      });
-    }
-
-    console.log("Query is not found in Cache, querying MongoDB.");
-
-    const properties = await Property.find()
-      .limit(lmt)
-      .lean();
-
-    await redisClient.setEx(
-      `Properties from page(s) limited to ${lmt}`,
-      60 * 60 * 60,
-      JSON.stringify(properties)
-    );
-
-    res.status(200).json({
-      success: true,
-      properties,
-      pagination:{
-        limit: lmt,
-      },
-      fromCache: false,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const getPropertiesByLimit = async (req, res, next) => {
   try {
-    const { page, lmt } = req.query;
+    const { page, limit } = req.query;
     const cached = await redisClient.get(
-      `Properties from page(s) ${page} limited to${lmt}`
+      `Properties from page(s) ${page} limited to${limit}`
     );
 
     if (cached) {
@@ -59,7 +15,7 @@ export const getPropertiesByLimit = async (req, res, next) => {
         properties: JSON.parse(cached),
         pagination: {
           page,
-          limit: lmt,
+          limit,
         },
         fromCache: true,
       });
@@ -68,12 +24,13 @@ export const getPropertiesByLimit = async (req, res, next) => {
     console.log("Query is not found in Cache, querying MongoDB.");
 
     const properties = await Property.find()
-      .skip((page - 1) * 10)
-      .limit(lmt)
+      .skip((page - 1) * 9)
+      .limit(limit)
       .lean();
 
+
     await redisClient.setEx(
-      `Properties from page(s) ${page} limited to${lmt}`,
+      `Properties from page(s) ${page} limited to${limit}`,
       60 * 60 * 60,
       JSON.stringify(properties)
     );
@@ -83,7 +40,7 @@ export const getPropertiesByLimit = async (req, res, next) => {
       properties,
       pagination: {
         page,
-        limit: lmt,
+        limit,
       },
       fromCache: false,
     });
@@ -158,8 +115,7 @@ export const sortByPrice = async (req, res, next) => {
       .lean();
 
     await redisClient.setEx(
-      `Property price in ${
-        order === "asc" ? "ascending" : "descending"
+      `Property price in ${order === "asc" ? "ascending" : "descending"
       } order.`,
       60 * 60 * 20,
       JSON.stringify(properties)
@@ -197,8 +153,7 @@ export const sortByTitle = async (req, res, next) => {
       .lean();
 
     await redisClient.setEx(
-      `Property title in ${
-        order === "asc" ? "ascending" : "descending"
+      `Property title in ${order === "asc" ? "ascending" : "descending"
       } order.`,
       60 * 60 * 20,
       JSON.stringify(properties)
