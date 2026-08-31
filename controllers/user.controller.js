@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { OAuth2Client } from "google-auth-library";
-import CLIENT_ID from "../config/env.config.js";
 import { createToken } from "../helpers/auth.helper.js";
+import { CLIENT_ID } from "../config/env.config.js";
 
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -65,7 +65,7 @@ export const signIn = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Invalid credentials" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compare(password, user.password);
     if (!isMatch)
       return res
         .status(401)
