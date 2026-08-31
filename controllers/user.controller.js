@@ -1,18 +1,11 @@
-import crypto from "crypto";
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
-import { CLIENT_ID, JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.config.js";
+import CLIENT_ID from "../config/env.config.js";
+import { createToken } from "../helpers/auth.helper.js";
 
 const client = new OAuth2Client(CLIENT_ID);
-
-const createToken = (user) => {
-  return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
-  });
-};
 
 // ======================= EMAIL/PASSWORD SIGNUP =======================
 export const signUp = async (req, res, next) => {
@@ -60,7 +53,7 @@ export const signUp = async (req, res, next) => {
 // ======================= EMAIL/PASSWORD SIGNIN =======================
 export const signIn = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     if (!email || !password)
       return res
         .status(400)
@@ -78,7 +71,7 @@ export const signIn = async (req, res, next) => {
         .status(401)
         .json({ success: false, message: "Invalid credentials" });
 
-    const token = createToken(user);
+    const token = createToken(user, rememberMe);
     res.json({
       success: true,
       message: "User signed in successfully",
@@ -91,13 +84,14 @@ export const signIn = async (req, res, next) => {
 };
 
 // ======================= GOOGLE SIGNUP/SIGNIN =======================
-export const googleAuth = async (req, res) => {
+export const googleAuth = async (req, res, next) => {
   try {
     const { token } = req.body;
-    if (!token)
+    if (!token) {
       return res
         .status(400)
         .json({ success: false, message: "Google token required" });
+    }
 
     const ticket = await client.verifyIdToken({
       idToken: token,
@@ -105,30 +99,50 @@ export const googleAuth = async (req, res) => {
     });
     const payload = ticket.getPayload();
 
-    let user = await User.findOne({ email: payload.email });
-    const randomPassword = crypto.randomBytes(32).toString("hex");
-    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+    if (!payload || !payload.email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Google payload" });
+    }
+
+    let user = await User.findOne({
+      $or: [{ googleId: payload.sub }, { email: payload.email }],
+    });
 
     if (!user) {
       user = await User.create({
         googleId: payload.sub,
-        firstName: payload.given_name,
-        lastName: payload.family_name,
+        firstName: payload.given_name || "Google",
+        lastName: payload.family_name || "User",
         email: payload.email,
-        password: hashedPassword,
         picture: payload.picture,
+        provider: "google",
       });
+    } else {
+      let updated = false;
+      if (!user.googleId) {
+        user.googleId = payload.sub;
+        updated = true;
+      }
+      if (!user.picture && payload.picture) {
+        user.picture = payload.picture;
+        updated = true;
+      }
+      if (updated) {
+        await user.save();
+      }
     }
 
     const appToken = createToken(user);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "User logged in successfully",
       jwt: appToken,
       user,
     });
   } catch (err) {
-    console.error("Error in google auth", err);
-    res.status(400).json({ success: false, message: "Invalid Google token" });
+    console.error("Error in google auth:", err.message);
+    res.status(400).json({ success: false, message: "Invalid or expired Google token" });
   }
 };
+

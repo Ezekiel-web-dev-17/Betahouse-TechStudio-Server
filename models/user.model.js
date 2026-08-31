@@ -32,8 +32,30 @@ const userSchema = new Schema(
 
     password: {
       type: String,
-      required: [true, "User Password is required"],
+      required: function () {
+        return this.provider !== "google";
+      },
       minLength: 6,
+    },
+
+    provider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+
+    googleId: {
+      type: String,
+    },
+
+    picture: {
+      type: String,
+    },
+
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
   },
   { timestamps: true }

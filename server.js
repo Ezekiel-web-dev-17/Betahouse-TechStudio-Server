@@ -6,9 +6,8 @@ import morgan from "morgan";
 import cors from "cors";
 import authRouter from "./routes/auth.route.js";
 import propertyRouter from "./routes/property.route.js";
-import { connectToDatabase } from "./Database/mongodb.database.js";
+import { connectToDatabase } from "./database/mongodb.database.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
-import arcjetMiddleware from "./middlewares/arcjet.middleware.js";
 import popularRoute from "./routes/popular.route.js";
 
 const app = express();
@@ -21,8 +20,6 @@ app.use(helmet());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 app.use(cookieParser());
-
-app.use(arcjetMiddleware);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/property", propertyRouter);

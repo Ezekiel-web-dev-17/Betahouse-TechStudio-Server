@@ -5,16 +5,12 @@ import {
   validateSignUp,
 } from "../middlewares/error.middleware.js";
 
-// Add to auth routes
-import rateLimit from "express-rate-limit";
-
-// const authLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 5, // limit each IP to 5 requests per windowMs
-//   message: "Too many authentication attempts",
-// });
+import arcjetMiddleware from "../middlewares/arcjet.middleware.js";
 
 const authRouter = Router();
+
+// Apply Arcjet rate limiting & bot protection specifically to auth endpoints
+authRouter.use(arcjetMiddleware);
 
 authRouter.post("/google", googleAuth);
 authRouter.post("/sign-up", validateSignUp, signUp);

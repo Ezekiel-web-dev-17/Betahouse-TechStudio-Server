@@ -1,47 +1,67 @@
 import { Property } from "../models/property.model.js";
 import redisClient from "../redis.js";
 
+const DEFAULT_CACHE_TTL = 60 * 60; // 1 hour
+
+// Helper to safely get from Redis
+const getFromCache = async (key) => {
+  try {
+    if (!redisClient.isOpen) return null;
+    const cached = await redisClient.get(key);
+    return cached ? JSON.parse(cached) : null;
+  } catch (err) {
+    console.warn(`Redis GET failed for key "${key}":`, err.message);
+    return null;
+  }
+};
+
+// Helper to safely set in Redis
+const setInCache = async (key, ttl, value) => {
+  try {
+    if (!redisClient.isOpen) return;
+    await redisClient.setEx(key, ttl, JSON.stringify(value));
+  } catch (err) {
+    console.warn(`Redis SET failed for key "${key}":`, err.message);
+  }
+};
+
 export const getPropertiesByLimit = async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
-    const cached = await redisClient.get(
-      `Properties from page(s) ${page} limited to${limit}`
-    );
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(1, Math.min(50, parseInt(req.query.limit, 10) || 9));
+    const cacheKey = `properties:page:${page}:limit:${limit}`;
 
-    if (cached) {
-      console.log("✅ Serving from Redis Cache");
+    const cachedData = await getFromCache(cacheKey);
+    if (cachedData) {
       return res.status(200).json({
         success: true,
-        properties: JSON.parse(cached),
-        pagination: {
-          page,
-          limit,
-        },
+        properties: cachedData.properties,
+        pagination: cachedData.pagination,
         fromCache: true,
       });
     }
 
-    console.log("Query is not found in Cache, querying MongoDB.");
+    const [total, properties] = await Promise.all([
+      Property.countDocuments(),
+      Property.find()
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
+    ]);
 
-    const properties = await Property.find()
-      .skip((page - 1) * 9)
-      .limit(limit)
-      .lean();
+    const pagination = {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    };
 
-
-    await redisClient.setEx(
-      `Properties from page(s) ${page} limited to${limit}`,
-      60 * 60 * 60,
-      JSON.stringify(properties)
-    );
+    await setInCache(cacheKey, DEFAULT_CACHE_TTL, { properties, pagination });
 
     res.status(200).json({
       success: true,
       properties,
-      pagination: {
-        page,
-        limit,
-      },
+      pagination,
       fromCache: false,
     });
   } catch (error) {
@@ -51,34 +71,28 @@ export const getPropertiesByLimit = async (req, res, next) => {
 
 export const filterProperties = async (req, res, next) => {
   try {
-    const { locate, bed, type, limit = 10 } = req.query;
+    const { locate, bed, type } = req.query;
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit, 10) || 10));
 
     let query = {};
-    if (locate) query.location = locate;
+    if (locate) query.location = new RegExp(locate, "i");
     if (bed) query.bed = Number(bed);
-    if (type) query.propertyType = type;
+    if (type) query.propertyType = new RegExp(type, "i");
 
-    const cached = await redisClient.get(
-      `Property  filtered by noOfBedroom: ${query.bed}, propertyType: ${query.propertyType}, at: ${query.location}.`
-    );
+    const cacheKey = `properties:filter:loc:${locate || "any"}:bed:${bed || "any"}:type:${type || "any"}:limit:${limit}`;
+    const cached = await getFromCache(cacheKey);
 
     if (cached) {
-      console.log("✅ Serving from Redis Cache");
       return res.status(200).json({
         success: true,
-        properties: JSON.parse(cached),
+        count: cached.length,
+        properties: cached,
         fromCache: true,
       });
     }
 
-    console.log("Query is not found in Cache, querying MongoDB.");
-
-    const properties = await Property.find(query).limit(Number(limit)).lean();
-    await redisClient.setEx(
-      `Property  filtered by noOfBedroom: ${query.bed}, propertyType: ${query.propertyType}, at: ${query.location}.`,
-      60 * 60 * 60,
-      JSON.stringify(properties)
-    );
+    const properties = await Property.find(query).limit(limit).lean();
+    await setInCache(cacheKey, DEFAULT_CACHE_TTL, properties);
 
     res.status(200).json({
       success: true,
@@ -93,33 +107,23 @@ export const filterProperties = async (req, res, next) => {
 
 export const sortByPrice = async (req, res, next) => {
   try {
-    const { order = "asc" } = req.query;
+    const order = req.query.order === "desc" ? "desc" : "asc";
+    const cacheKey = `properties:sort:price:${order}`;
 
-    const cached = await redisClient.get(
-      `Property price in ${order === "asc" ? "ascending" : "descending"} order.`
-    );
-
+    const cached = await getFromCache(cacheKey);
     if (cached) {
-      console.log("✅ Serving from Redis Cache");
       return res.status(200).json({
         success: true,
-        properties: JSON.parse(cached),
+        properties: cached,
         fromCache: true,
       });
     }
 
-    console.log("Query is not found in Cache, querying MongoDB.");
-
     const properties = await Property.find()
-      .sort({ amount: order === "asc" ? 1 : -1 }) // sort by price
+      .sort({ amount: order === "asc" ? 1 : -1 })
       .lean();
 
-    await redisClient.setEx(
-      `Property price in ${order === "asc" ? "ascending" : "descending"
-      } order.`,
-      60 * 60 * 20,
-      JSON.stringify(properties)
-    );
+    await setInCache(cacheKey, DEFAULT_CACHE_TTL, properties);
 
     res.status(200).json({
       success: true,
@@ -133,17 +137,14 @@ export const sortByPrice = async (req, res, next) => {
 
 export const sortByTitle = async (req, res, next) => {
   try {
-    const { order = "asc" } = req.query;
+    const order = req.query.order === "desc" ? "desc" : "asc";
+    const cacheKey = `properties:sort:title:${order}`;
 
-    const cached = await redisClient.get(
-      `Property title in ${order === "asc" ? "ascending" : "descending"} order.`
-    );
-
+    const cached = await getFromCache(cacheKey);
     if (cached) {
-      console.log("✅ Serving from Redis Cache");
       return res.status(200).json({
         success: true,
-        properties: JSON.parse(cached),
+        properties: cached,
         fromCache: true,
       });
     }
@@ -152,12 +153,7 @@ export const sortByTitle = async (req, res, next) => {
       .sort({ title: order === "desc" ? -1 : 1 })
       .lean();
 
-    await redisClient.setEx(
-      `Property title in ${order === "asc" ? "ascending" : "descending"
-      } order.`,
-      60 * 60 * 20,
-      JSON.stringify(properties)
-    );
+    await setInCache(cacheKey, DEFAULT_CACHE_TTL, properties);
 
     res.status(200).json({
       success: true,
@@ -168,3 +164,4 @@ export const sortByTitle = async (req, res, next) => {
     next(error);
   }
 };
+

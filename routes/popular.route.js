@@ -3,7 +3,7 @@ import Popular from "../models/popular.model.js";
 
 const popularRoute = Router();
 
-popularRoute.get("/", async (req, res) => {
+popularRoute.get("/", async (_req, res, next) => {
   try {
     const popularProperties = await Popular.find().lean();
     res.status(200).json({
