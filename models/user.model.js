@@ -57,6 +57,13 @@ const userSchema = new Schema(
       enum: ["user", "admin", "agent"],
       default: "user",
     },
+
+    favorites: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Property",
+      },
+    ],
   },
   { timestamps: true }
 );
