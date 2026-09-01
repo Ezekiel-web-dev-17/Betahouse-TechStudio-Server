@@ -5,12 +5,23 @@ const propertySchema = new Schema(
     image: {
       type: String,
       required: true,
-      unique: true,
+    },
+
+    images: {
+      type: [String],
+      default: [],
     },
 
     whatFor: {
       type: String,
       required: true,
+      enum: ["Sale", "Rent"],
+    },
+
+    status: {
+      type: String,
+      enum: ["Sold", "For Sale", "Rented", "For Rent"],
+      default: "For Sale",
     },
 
     title: {

@@ -17,7 +17,15 @@ const img15 = "../utils/Blackorwhite.jpg";
 const propertyApi = [
   {
     image: img1,
+    images: [
+      img1,
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Real House Luxury Villa",
     location: "Victoria Island, Lagos",
     bed: 6,
@@ -27,7 +35,14 @@ const propertyApi = [
   },
   {
     image: img2,
+    images: [
+      img2,
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Rent",
+    status: "For Rent",
     title: "Exquisite Haven Villa",
     location: "Festac, Lagos",
     bed: 5,
@@ -37,7 +52,14 @@ const propertyApi = [
   },
   {
     image: img3,
+    images: [
+      img3,
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Luxe Palatial Villa",
     location: "Gbagada, Lagos",
     bed: 7,
@@ -47,7 +69,14 @@ const propertyApi = [
   },
   {
     image: img4,
+    images: [
+      img4,
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Rent",
+    status: "For Rent",
     title: "Harmony Luxury Villa",
     location: "Mushin, Lagos",
     bed: 4,
@@ -57,7 +86,14 @@ const propertyApi = [
   },
   {
     image: img5,
+    images: [
+      img5,
+      "https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Rent",
+    status: "For Rent",
     title: "Real House Luxury Villa",
     location: "Victoria Island, Lagos",
     bed: 6,
@@ -67,7 +103,14 @@ const propertyApi = [
   },
   {
     image: img6,
+    images: [
+      img6,
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Real House Luxury Villa",
     location: "Lekki-Ajah, Lagos",
     bed: 5,
@@ -77,7 +120,14 @@ const propertyApi = [
   },
   {
     image: img7,
+    images: [
+      img7,
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Infinite Bliss Villa",
     location: "Ishiagu, Enugu",
     bed: 5,
@@ -87,7 +137,14 @@ const propertyApi = [
   },
   {
     image: img8,
+    images: [
+      img8,
+      "https://images.unsplash.com/photo-1576941089067-2de3c901e126?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Rent",
+    status: "For Rent",
     title: "Real House Luxury Villa",
     location: "Works Layout, Owerri",
     bed: 8,
@@ -97,7 +154,14 @@ const propertyApi = [
   },
   {
     image: img9,
+    images: [
+      img9,
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Real House Luxury Villa",
     location: "Ikeja, Lagos",
     bed: 6,
@@ -107,7 +171,14 @@ const propertyApi = [
   },
   {
     image: img10,
+    images: [
+      img10,
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Harmony Luxury Villa",
     location: "Ikeja, Lagos",
     bed: 5,
@@ -117,7 +188,14 @@ const propertyApi = [
   },
   {
     image: img11,
+    images: [
+      img11,
+      "https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Rent",
+    status: "For Rent",
     title: "Infinite Bliss Villa",
     location: "Works Layout, Owerri",
     bed: 8,
@@ -127,7 +205,14 @@ const propertyApi = [
   },
   {
     image: img12,
+    images: [
+      img12,
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Rent",
+    status: "For Rent",
     title: "Real House Luxury Villa",
     location: "Gbagada, Lagos",
     bed: 4,
@@ -137,7 +222,14 @@ const propertyApi = [
   },
   {
     image: img13,
+    images: [
+      img13,
+      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Luxe Palatial Villa",
     location: "Lekki-Ajah, Lagos",
     bed: 4,
@@ -147,7 +239,14 @@ const propertyApi = [
   },
   {
     image: img14,
+    images: [
+      img14,
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Sale",
+    status: "For Sale",
     title: "Exquisite Haven Villa",
     location: "Ishiagu, Enugu",
     bed: 7,
@@ -157,7 +256,14 @@ const propertyApi = [
   },
   {
     image: img15,
+    images: [
+      img15,
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&q=80&w=1200",
+    ],
     whatFor: "Rent",
+    status: "For Rent",
     title: "Infinite Bliss Villa",
     location: "Mushin, Lagos",
     bed: 5,

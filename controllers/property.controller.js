@@ -25,6 +25,23 @@ const setInCache = async (key, ttl, value) => {
   }
 };
 
+// Helper to invalidate property cache
+export const invalidatePropertyCache = async (propertyId) => {
+  try {
+    if (!redisClient.isOpen) return;
+    if (propertyId) {
+      await redisClient.del(`properties:item:${propertyId}`);
+    }
+    // Delete known list/sort/filter cache keys or use scan
+    const keys = await redisClient.keys("properties:*");
+    if (keys.length > 0) {
+      await redisClient.del(keys);
+    }
+  } catch (err) {
+    console.warn("Error invalidating property cache:", err.message);
+  }
+};
+
 export const getPropertiesByLimit = async (req, res, next) => {
   try {
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
@@ -62,6 +79,46 @@ export const getPropertiesByLimit = async (req, res, next) => {
       success: true,
       properties,
       pagination,
+      fromCache: false,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPropertyById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const cacheKey = `properties:item:${id}`;
+
+    const cached = await getFromCache(cacheKey);
+    if (cached) {
+      return res.status(200).json({
+        success: true,
+        property: cached,
+        fromCache: true,
+      });
+    }
+
+    let property = null;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      property = await Property.findById(id).lean();
+    } else {
+      property = await Property.findOne({ title: new RegExp(id, "i") }).lean();
+    }
+
+    if (!property) {
+      return res.status(404).json({
+        success: false,
+        message: "Property not found",
+      });
+    }
+
+    await setInCache(cacheKey, DEFAULT_CACHE_TTL, property);
+
+    res.status(200).json({
+      success: true,
+      property,
       fromCache: false,
     });
   } catch (error) {
@@ -107,7 +164,7 @@ export const filterProperties = async (req, res, next) => {
 
 export const sortByPrice = async (req, res, next) => {
   try {
-    const order = req.query.order === "desc" ? "desc" : "asc";
+    const order = req.query.order === "desc" || req.query.order === "des" ? "desc" : "asc";
     const cacheKey = `properties:sort:price:${order}`;
 
     const cached = await getFromCache(cacheKey);
@@ -137,7 +194,7 @@ export const sortByPrice = async (req, res, next) => {
 
 export const sortByTitle = async (req, res, next) => {
   try {
-    const order = req.query.order === "desc" ? "desc" : "asc";
+    const order = req.query.order === "desc" || req.query.order === "des" ? "desc" : "asc";
     const cacheKey = `properties:sort:title:${order}`;
 
     const cached = await getFromCache(cacheKey);
@@ -165,3 +222,69 @@ export const sortByTitle = async (req, res, next) => {
   }
 };
 
+export const createProperty = async (req, res, next) => {
+  try {
+    const existingProperty = await Property.findOne({
+      location: new RegExp(req.body.location, "i"),
+      title: new RegExp(req.body.title, "i"),
+    })
+
+    if (existingProperty) {
+      return res.status(400).json({
+        success: false,
+        message: "Property already exists",
+      });
+    }
+    const newProperty = await Property.create(req.body);
+    await invalidatePropertyCache();
+    res.status(201).json({
+      success: true,
+      message: "Property created successfully",
+      property: newProperty,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProperty = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updated = await Property.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: "Property not found" });
+    }
+
+    await invalidatePropertyCache(id);
+    res.status(200).json({
+      success: true,
+      message: "Property updated successfully",
+      property: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteProperty = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Property.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: "Property not found" });
+    }
+
+    await invalidatePropertyCache(id);
+    res.status(200).json({
+      success: true,
+      message: "Property deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
