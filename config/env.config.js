@@ -14,4 +14,9 @@ export const {
   REDIS_PORT,
   REDIS_PASSWORD,
   CLIENT_ID,
+  // Paystack payment gateway
+  PAYSTACK_SECRET_KEY,
+  PAYSTACK_PUBLIC_KEY,
+  // Frontend URL (used in Paystack callback_url)
+  CLIENT_URL,
 } = process.env;

@@ -20,7 +20,7 @@ const propertySchema = new Schema(
 
     status: {
       type: String,
-      enum: ["Sold", "For Sale", "Rented", "For Rent"],
+      enum: ["Sold", "For Sale", "Rented", "For Rent", "Reserved"],
       default: "For Sale",
     },
 

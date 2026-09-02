@@ -11,6 +11,7 @@ import blogRouter from "./routes/blog.route.js";
 import contactRouter from "./routes/contact.route.js";
 import tourRouter from "./routes/tour.route.js";
 import newsletterRouter from "./routes/newsletter.route.js";
+import checkoutRouter from "./routes/checkout.route.js";
 import { connectToDatabase } from "./database/mongodb.database.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 
@@ -21,6 +22,13 @@ app.set("trust proxy", true);
 app.use(cors());
 app.use(morgan("dev"));
 app.use(helmet());
+
+// ─── IMPORTANT: Checkout webhook needs raw body for HMAC-SHA512 verification.
+// express.raw() is scoped inside the checkout router to /webhook specifically.
+// We mount the checkout router BEFORE express.json() so the raw middleware
+// on that route runs before any global body parser can consume the stream.
+app.use("/api/v1/checkout", checkoutRouter);
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 app.use(cookieParser());
@@ -33,6 +41,7 @@ app.use("/api/v1/blogs", blogRouter);
 app.use("/api/v1/contact", contactRouter);
 app.use("/api/v1/tour", tourRouter);
 app.use("/api/v1/newsletter", newsletterRouter);
+// Note: /api/v1/checkout is already mounted above (before express.json)
 
 // Health check route
 app.get("/health", (req, res) => {
