@@ -3,7 +3,7 @@ import { Newsletter } from "../models/newsletter.model.js";
 export const subscribeNewsletter = async (req, res, next) => {
   try {
     const { email } = req.body;
-    if (!email || !email.includes("@") || !email.matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+    if (!email || !email.includes("@") || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
       return res.status(400).json({
         success: false,
         message: "Please provide a valid email address.",
@@ -31,7 +31,7 @@ export const subscribeNewsletter = async (req, res, next) => {
 
 export const unsubscribeNewsletter = async (req, res, next) => {
   const { email } = req.body;
-  if (!email || !email.includes("@") || !email.matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+  if (!email || !email.includes("@") || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
     return res.status(400).json({
       success: false,
       message: "Please provide a valid email address.",
