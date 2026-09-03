@@ -13,26 +13,12 @@ const checkoutRouter = express.Router();
 
 /**
  * POST /api/v1/checkout/webhook
- *
- * CRITICAL: Uses express.raw() so the body arrives as a raw Buffer.
- * Paystack's HMAC-SHA512 signature is computed over the raw bytes.
- * If Express parses JSON first, the signature verification will fail.
- *
- * This route is registered on the router BEFORE any JSON-parsing middleware.
- * The router itself is mounted in server.js BEFORE the global express.json().
+ * Paystack HMAC-SHA512 webhook notification handler.
  */
-checkoutRouter.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  handleWebhook
-);
-
-// Apply JSON body parser middleware for all subsequent checkout routes
-checkoutRouter.use(express.json({ limit: "10mb" }));
+checkoutRouter.post("/webhook", handleWebhook);
 
 /**
  * POST /api/v1/checkout/initiate
- *
  * Initiates a property reservation and Paystack payment transaction.
  *
  * Required headers:
@@ -53,7 +39,6 @@ checkoutRouter.post(
 /**
  * GET /api/v1/checkout/verify/:reference
  * Server-side verification after Paystack redirects back.
- * Safer than trusting URL params — does a DB lookup by JWT owner.
  */
 checkoutRouter.get("/verify/:reference", protect, verifyPayment);
 

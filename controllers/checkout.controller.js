@@ -88,9 +88,24 @@ async function invalidatePropertyCache() {
  * 6. Return { authorizationUrl, reference, orderId, orderRef }
  */
 export const initiateCheckout = async (req, res, next) => {
-  const { cart, buyerInfo, paymentMethod } = req.body;
+  const body = req.body || {};
+  const { cart, buyerInfo } = body;
   const { idempotencyKeyHash } = req;
   const userId = req.user._id;
+
+  // Normalize paymentMethod string from frontend UI values ("Bank Transfer", "Debit Card", etc.)
+  let rawMethod = body.paymentMethod || "bank_transfer";
+  let paymentMethod = "bank_transfer";
+  if (typeof rawMethod === "string") {
+    const lower = rawMethod.toLowerCase();
+    if (lower.includes("bank") || lower.includes("transfer") || lower.includes("wire")) {
+      paymentMethod = "bank_transfer";
+    } else if (lower.includes("installment") || lower.includes("plan")) {
+      paymentMethod = "installment";
+    } else if (lower.includes("card") || lower.includes("debit") || lower.includes("credit") || lower.includes("paystack")) {
+      paymentMethod = "card";
+    }
+  }
 
   // ── 1. Basic validation ────────────────────────────────────────────────
   if (!cart || !Array.isArray(cart) || cart.length === 0) {
@@ -391,7 +406,7 @@ export const handleWebhook = async (req, res) => {
     return res.status(401).json({ success: false, message: "Missing signature" });
   }
 
-  const rawBody = req.body; // Buffer (from express.raw())
+  const rawBody = req.rawBody || req.body; // Raw buffer from express.json verify hook or express.raw
   const expectedSig = createHmac("sha512", PAYSTACK_SECRET_KEY)
     .update(rawBody)
     .digest("hex");
