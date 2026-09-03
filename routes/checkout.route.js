@@ -27,6 +27,9 @@ checkoutRouter.post(
   handleWebhook
 );
 
+// Apply JSON body parser middleware for all subsequent checkout routes
+checkoutRouter.use(express.json({ limit: "10mb" }));
+
 /**
  * POST /api/v1/checkout/initiate
  *
